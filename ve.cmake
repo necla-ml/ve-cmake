@@ -296,28 +296,28 @@ else()
 endif()
 message(STATUS "VE_EXEC ends up as ${VE_EXEC}")
 
-# VE libc and other libs
-# ? find_library c ... ?
-set(VE_MUSL_DIR "${VE_OPT}/musl" CACHE PATH "Aurora musl directory")
-set(VE_MUSL_FLAGS " -I${VE_MUSL_DIR}/include -L${VE_MUSL_DIR}/lib" CACHE STRING "Aurora C/CXX compile/link options. ncc/nc++ auto uses the include path!")
-if(NOT EXISTS ${VE_MUSL_DIR})
-    message(WARNING "ve.cmake: VE musl directory not found")
-endif()
-message(STATUS "VE_MUSL_DIR [libc]          : ${VE_MUSL_DIR}")
-message(STATUS "VE_MUSL_FLAGS               : ${VE_MUSL_FLAGS}")
-# VE_MUSL_DIR seems OK
-# Note: MUSL is **always** included for you by ncc/nc++
-
-if(VE_MUSL_DIR)
-    list(APPEND CMAKE_FIND_ROOT_PATH ${VE_MUSL_DIR})
-    list(APPEND CMAKE_SYSTEM_PREFIX_PATH ${VE_MUSL_DIR})
-    message(STATUS "CMAKE_SYSTEM_PREFIX_PATH -> ${CMAKE_SYSTEM_PREFIX_PATH}")
-    # TODO actually check that the function 'dlopen' is there
-    # Note: linker is auto-supplied ld-musl-ve via ncc/nc++ [I think]
-    find_library(VE_DL_LIBRARY NAMES ld-musl-ve c dl# there is no libdl.a for dlopen,...
-        NO_DEFAULT_PATH HINTS ${VE_MUSL_DIR}/lib)
-    set(VE_DL_LIBRARY ${VE_DL_LIBRARY} CACHE PATH "Library that may contain a dlopen function")
-endif()
+# # VE libc and other libs
+# # ? find_library c ... ?
+# set(VE_MUSL_DIR "${VE_OPT}/musl" CACHE PATH "Aurora musl directory")
+# set(VE_MUSL_FLAGS " -I${VE_MUSL_DIR}/include -L${VE_MUSL_DIR}/lib" CACHE STRING "Aurora C/CXX compile/link options. ncc/nc++ auto uses the include path!")
+# if(NOT EXISTS ${VE_MUSL_DIR})
+#     message(WARNING "ve.cmake: VE musl directory not found")
+# endif()
+# message(STATUS "VE_MUSL_DIR [libc]          : ${VE_MUSL_DIR}")
+# message(STATUS "VE_MUSL_FLAGS               : ${VE_MUSL_FLAGS}")
+# # VE_MUSL_DIR seems OK
+# # Note: MUSL is **always** included for you by ncc/nc++
+# 
+# if(VE_MUSL_DIR)
+#     list(APPEND CMAKE_FIND_ROOT_PATH ${VE_MUSL_DIR})
+#     list(APPEND CMAKE_SYSTEM_PREFIX_PATH ${VE_MUSL_DIR})
+#     message(STATUS "CMAKE_SYSTEM_PREFIX_PATH -> ${CMAKE_SYSTEM_PREFIX_PATH}")
+#     # TODO actually check that the function 'dlopen' is there
+#     # Note: linker is auto-supplied ld-musl-ve via ncc/nc++ [I think]
+#     find_library(VE_DL_LIBRARY NAMES ld-musl-ve c dl# there is no libdl.a for dlopen,...
+#         NO_DEFAULT_PATH HINTS ${VE_MUSL_DIR}/lib)
+#     set(VE_DL_LIBRARY ${VE_DL_LIBRARY} CACHE PATH "Library that may contain a dlopen function")
+# endif()
 
 # For reference, from nlc 1.0.0 docs ............
 # Various NLC options ...........................
@@ -370,6 +370,7 @@ function(NLC_PRELIM_SETTINGS)
                 set(VE_CBLAS_INCLUDE_DIR "${NLC_HOME}/include")
             endif()
         else()
+            message(FATAL_ERROR "environment variable NLC_HOME not set")
             foreach(_ve_nlc_root "$ENV{NLC_BASE}" "${VE_OPT}/nlc")
                 if(IS_DIRECTORY "${_ve_nlc_root}")
                     message(STATUS "glob relative to ${_ve_nlc_root} directory")
@@ -837,8 +838,8 @@ message(STATUS "VE_CXX_PREINC               : ${VE_CXX_PREINC}")
 message(STATUS "VE_CXX_SYSINC               : ${VE_CXX_PREINC}")
 message(STATUS "VE_OPT                      : ${VE_OPT}")
 message(STATUS "VE_EXEC                     : ${VE_EXEC}")
-message(STATUS "VE_MUSL_DIR                 : ${VE_MUSL_DIR}")
-message(STATUS "VE_MUSL_FLAGS               : ${VE_MUSL_FLAGS}")
+# message(STATUS "VE_MUSL_DIR                 : ${VE_MUSL_DIR}")
+# message(STATUS "VE_MUSL_FLAGS               : ${VE_MUSL_FLAGS}")
 message(STATUS "VE_DL_LIBRARY               : ${VE_DL_LIBRARY}")
 message(STATUS "VE_NLC_DIR                  : ${VE_NLC_DIR}")
 message(STATUS "VE_NLC_FLAGS                : ${VE_NLC_FLAGS}")
@@ -1002,8 +1003,8 @@ macro(show_cmake_stuff MSG)
     message(STATUS "    VE_CXX_ROOTDIR                  ${VE_CXX_ROOTDIR}")
     message(STATUS "    VE_OPT                          ${VE_OPT}")
     message(STATUS "    VE_EXEC                         ${VE_EXEC}")
-    message(STATUS "    VE_MUSL_DIR                     ${VE_MUSL_DIR}")
-    message(STATUS "    VE_MUSL_FLAGS                   ${VE_MUSL_FLAGS}")
+    # message(STATUS "    VE_MUSL_DIR                     ${VE_MUSL_DIR}")
+    # message(STATUS "    VE_MUSL_FLAGS                   ${VE_MUSL_FLAGS}")
     message(STATUS "    VE_DL_LIBRARY                   ${VE_DL_LIBRARY}")
     message(STATUS "    VE_NLC_DIR                      ${VE_NLC_DIR}")
     message(STATUS "    VE_NLC_FLAGS                    ${VE_NLC_FLAGS}")
